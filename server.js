@@ -4,7 +4,7 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 server.listen(8080);
-// WARNING: app.listen(80) will NOT work here!
+// WARNING: app.listen(8080) will NOT work here!
 
 app.use(express.static(__dirname + "/dist"));
 

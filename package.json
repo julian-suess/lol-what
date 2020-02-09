@@ -8,7 +8,9 @@
   "license": "MIT",
   "dependencies": {
     "bulma": "^0.8.0",
+    "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "nodemon": "^2.0.2",
     "p5": "^0.10.2",
     "parcel-bundler": "^1.12.4",
