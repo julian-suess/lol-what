@@ -1,125 +1,93 @@
 import "p5/lib/addons/p5.sound";
 import p5 from "p5";
 
-function toggleFullScreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
-  }
-}
-
 let sketch = function(p) {
   let mic, fft;
   let pink = "#ff4081";
   let yellow = "#ffff00";
   let spectrum;
 
-  let drawRect = (x, y, width, height, color) => {
+  let drawRect = (x, y, color) => {
     p.fill(color);
-    p.rect(x, y, width, height);
+    p.rect(x, y, boxWidth, boxHeight);
   };
 
-  let drawWildCircle = (x, y, width, height, color = yellow) => {
-    drawRect(x, y, width, height, color);
-
-    let startY = y + height / 2;
-    p.line(x, startY, x + width, startY);
-
-    for (let i = 0; i < spectrum.length; i++) {
-      if (i % 2 == 0) p.fill(yellow);
-      else p.fill(pink);
-
-      let x = p.map(i, 0, spectrum.length, width / 4, width);
-      p.circle(x, startY, p.map(spectrum[i], 0, 255, 0, height));
-    }
-  };
-
-  let drawCircle = (x, y, width, height, color = pink) => {
-    drawRect(x, y, width, height, color);
-
-    for (let i = 0; i < spectrum.length; i++) {
-      if (i % 2 == 0) p.fill(pink);
-      else p.fill(yellow);
-
-      p.circle(
-        x + width / 2,
-        y + height / 2,
-        p.map(spectrum[i], 0, 255, 0, height)
+  let radMemo = {};
+  let radOf = index => {
+    if (index < 0) return 0;
+    if (index in radMemo) return radMemo[index];
+    else {
+      radOf[index] = p.map(
+        spectrum[index],
+        0,
+        spectrum.length,
+        0,
+        p.windowHeight * 2
       );
-    }
-
-    // p.fill(yellow);
-    // p.rect(0, height, width, height);
-
-    // p.beginShape();
-    // for (let i = 0; i < 128; i++) {
-    //   let x = p.map(i, 1, 128, 0, width);
-    //   p.vertex(x, p.map(spectrum[i], 1, 128, height - height / 3, 0));
-    // }
-    // p.endShape();
-  };
-
-  let c;
-  let lineLength = 0;
-  let angle = 0;
-  let angleSpeed = 1;
-
-  let drawRotatedLine = (x, y, width, height, color = yellow) => {
-    // drawRect(x, y, width, height, color);
-
-    if (p.mouseIsPressed && p.mouseButton == p.LEFT) {
-      p.push();
-      p.translate(p.mouseX, p.mouseY);
-      p.rotate(p.radians(angle));
-      p.stroke(c);
-      p.line(0, 0, lineLength, 0);
-      p.pop();
-
-      angle += angleSpeed;
+      return radOf[index];
     }
   };
 
-  let drawFFT = (x, y, width, height, color = pink) => {
-    drawRect(x, y, width, height, color);
-
-    let angle = spectrum.length / 360;
-    p.beginShape();
-    for (let i = 0; i < spectrum.length; i++) {
-      p.angleMode(p.DEGREES);
-      p.line(
-        x + width / 2,
-        y + height / 2,
-        spectrum[i] * p.cos(i * angle),
-        spectrum[i] * p.sin(i * angle)
-      );
-    }
-    p.endShape();
-  };
-
-  p.mousePressed = function() {
-    // create a new random line length each new press
-    lineLength = p.random(70, 200);
-  };
-
-  p.keyPressed = function() {
-    if (p.keyCode == p.UP_ARROW) lineLength += 5;
-    if (p.keyCode == p.DOWN_ARROW) lineLength -= 5;
-    if (p.keyCode == p.LEFT_ARROW) angleSpeed -= 0.5;
-    if (p.keyCode == p.RIGHT_ARROW) angleSpeed += 0.5;
-  };
-
-  p.keyReleased = function() {
-    // reverse direction and mirror angle
-    if (p.key == "d" || p.key == "D") {
-      angle += 180;
-      angleSpeed *= -1;
+  let cosMemo = {};
+  let cosOf = angle => {
+    if (angle in cosMemo) return cosMemo[angle];
+    else {
+      cosMemo[angle] = p.cos(angle);
+      return cosMemo[angle];
     }
   };
 
-  // Setup
+  let sinMemo = {};
+  let sinOf = angle => {
+    if (angle in sinMemo) return sinMemo[angle];
+    else {
+      sinMemo[angle] = p.sin(angle);
+      return sinMemo[angle];
+    }
+  };
+
+  let anotherCircle = {};
+  let drawAnotherCircle = i => {
+    let spectrumCount = spectrum.length - i;
+
+    let rad = radOf(i);
+    let rad1 = radOf(spectrum.length - i) / 2;
+
+    let prevX = anotherCircle.midX + rad * cosOf(spectrumCount * angle);
+    let prevY = anotherCircle.midY + rad * sinOf(spectrumCount * angle);
+
+    let nowX = anotherCircle.midX + rad1 * cosOf(i * angle);
+    let nowY = anotherCircle.midY + rad1 * sinOf(i * angle);
+
+    p.fill(pink);
+    p.circle(prevX, prevY, 10);
+    p.fill(yellow);
+    p.circle(nowX, nowY, 10);
+  };
+
+  let wildX;
+  let wildY;
+  let wildStartY;
+  let wildCircle = i => {
+    if (i % 2 == 0) p.fill(pink);
+    else p.fill(yellow);
+
+    let wildX = p.map(i, 0, spectrum.length, boxWidth / 4, boxWidth);
+    p.circle(wildX, wildStartY, radOf(i));
+  };
+
+  let boringCircle = {};
+  let drawCircle = i => {
+    if (i % 2 == 0) p.fill(yellow);
+    else p.fill(pink);
+
+    p.circle(
+      boringCircle.x + boxWidth / 2,
+      boringCircle.y + boxHeight / 2,
+      radOf(i)
+    );
+  };
+
   p.setup = function() {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.noFill();
@@ -129,23 +97,58 @@ let sketch = function(p) {
     fft = new p5.FFT();
     fft.setInput(mic);
 
-    c = p.color(181, 157, 0);
-    let width = p.windowWidth;
-    let height = p.windowHeight;
-    drawRect(width / 2, 0, width / 2, height / 2, yellow);
+    p.angleMode(p.DEGREES);
+
+    updateDimension();
   };
 
-  // Draw
+  let boxWidth;
+  let boxHeight;
+  let updateDimension = () => {
+    boxWidth = p.windowWidth / 2;
+    boxHeight = p.windowHeight / 2;
+
+    wildX = 0;
+    wildY = boxHeight;
+    wildStartY = wildY + boxHeight / 2;
+
+    anotherCircle.x = boxWidth;
+    anotherCircle.y = 0;
+    anotherCircle.midX = anotherCircle.x + boxWidth / 2;
+    anotherCircle.midY = anotherCircle.y + boxHeight / 2;
+
+    boringCircle.x = boxWidth;
+    boringCircle.y = boxHeight;
+  };
+
+  let angle;
   p.draw = function() {
-    let width = p.windowWidth;
-    let height = p.windowHeight;
-
     spectrum = fft.analyze();
+    angle = spectrum.length / 360;
 
-    drawFFT(0, 0, width / 2, height / 2);
-    drawRotatedLine(width / 2, 0, width / 2, height / 2);
-    drawWildCircle(0, height / 2, width / 2, height / 2);
-    drawCircle(width / 2, height / 2, width / 2, height / 2);
+    drawRect(wildX, wildY, yellow);
+    drawRect(anotherCircle.x, anotherCircle.y, yellow);
+    drawRect(boringCircle.x, boringCircle.y, pink);
+    drawRect(0, 0, pink);
+
+    p.line(wildX, wildStartY, wildX + boxWidth, wildStartY);
+
+    let fftX = boxWidth / 2;
+    let fftY = boxHeight / 2;
+
+    for (let i = 0; i < spectrum.length; i++) {
+      wildCircle(i);
+      drawAnotherCircle(i);
+      drawCircle(i);
+
+      let rad = radOf(i);
+      p.line(
+        fftX,
+        fftY,
+        fftX + rad * p.cos(i * angle),
+        fftY + rad * p.sin(i * angle)
+      );
+    }
 
     p.noFill();
   };
@@ -156,6 +159,17 @@ let sketch = function(p) {
 
   p.windowResized = function() {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
+    updateDimension();
+  };
+
+  let toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
   };
 };
 
