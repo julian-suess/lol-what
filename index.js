@@ -12,22 +12,6 @@ let sketch = function(p) {
     p.rect(x, y, boxWidth, boxHeight);
   };
 
-  let radMemo = {};
-  let radOf = index => {
-    if (index < 0) return 0;
-    if (index in radMemo) return radMemo[index];
-    else {
-      radOf[index] = p.map(
-        spectrum[index],
-        0,
-        spectrum.length,
-        0,
-        p.windowHeight * 2
-      );
-      return radOf[index];
-    }
-  };
-
   let cosMemo = {};
   let cosOf = angle => {
     if (angle in cosMemo) return cosMemo[angle];
@@ -50,8 +34,14 @@ let sketch = function(p) {
   let drawAnotherCircle = i => {
     let spectrumCount = spectrum.length - i;
 
-    let rad = radOf(i);
-    let rad1 = radOf(spectrum.length - i) / 2;
+    let rad = p.map(spectrum[i], 0, spectrum.length, 0, p.windowHeight * 2);
+    let rad1 = p.map(
+      spectrum[spectrum.length - 1 - i],
+      0,
+      spectrum.length,
+      0,
+      p.windowHeight * 2
+    );
 
     let prevX = anotherCircle.midX + rad * cosOf(spectrumCount * angle);
     let prevY = anotherCircle.midY + rad * sinOf(spectrumCount * angle);
@@ -65,26 +55,39 @@ let sketch = function(p) {
     p.circle(nowX, nowY, 10);
   };
 
-  let wildX;
-  let wildY;
-  let wildStartY;
-  let wildCircle = i => {
+  let wildCircle = {};
+  let drawWildCircle = i => {
     if (i % 2 == 0) p.fill(pink);
     else p.fill(yellow);
 
     let wildX = p.map(i, 0, spectrum.length, boxWidth / 4, boxWidth);
-    p.circle(wildX, wildStartY, radOf(i));
+    p.circle(
+      wildX,
+      wildCircle.midY,
+      p.map(spectrum[i], 0, spectrum.length, 0, p.windowHeight * 2)
+    );
   };
 
   let boringCircle = {};
-  let drawCircle = i => {
+  let drawBoringCircle = i => {
     if (i % 2 == 0) p.fill(yellow);
     else p.fill(pink);
 
     p.circle(
       boringCircle.x + boxWidth / 2,
       boringCircle.y + boxHeight / 2,
-      radOf(i)
+      p.map(spectrum[i], 0, spectrum.length, 0, p.windowHeight * 2)
+    );
+  };
+
+  let lineCircle = {};
+  let drawLineCircle = i => {
+    let rad = p.map(spectrum[i], 0, spectrum.length, 0, p.windowHeight * 2);
+    p.line(
+      lineCircle.midX,
+      lineCircle.midY,
+      lineCircle.midX + rad * p.cos(i * angle),
+      lineCircle.midY + rad * p.sin(i * angle)
     );
   };
 
@@ -108,9 +111,9 @@ let sketch = function(p) {
     boxWidth = p.windowWidth / 2;
     boxHeight = p.windowHeight / 2;
 
-    wildX = 0;
-    wildY = boxHeight;
-    wildStartY = wildY + boxHeight / 2;
+    wildCircle.x = 0;
+    wildCircle.y = boxHeight;
+    wildCircle.midY = wildCircle.y + boxHeight / 2;
 
     anotherCircle.x = boxWidth;
     anotherCircle.y = 0;
@@ -119,6 +122,11 @@ let sketch = function(p) {
 
     boringCircle.x = boxWidth;
     boringCircle.y = boxHeight;
+
+    lineCircle.x = 0;
+    lineCircle.y = 0;
+    lineCircle.midX = boxWidth / 2;
+    lineCircle.midY = boxHeight / 2;
   };
 
   let angle;
@@ -126,28 +134,23 @@ let sketch = function(p) {
     spectrum = fft.analyze();
     angle = spectrum.length / 360;
 
-    drawRect(wildX, wildY, yellow);
+    drawRect(wildCircle.x, wildCircle.y, yellow);
     drawRect(anotherCircle.x, anotherCircle.y, yellow);
     drawRect(boringCircle.x, boringCircle.y, pink);
-    drawRect(0, 0, pink);
+    drawRect(lineCircle.x, lineCircle.y, pink);
 
-    p.line(wildX, wildStartY, wildX + boxWidth, wildStartY);
-
-    let fftX = boxWidth / 2;
-    let fftY = boxHeight / 2;
+    p.line(
+      wildCircle.x,
+      wildCircle.midY,
+      wildCircle.x + boxWidth,
+      wildCircle.midY
+    );
 
     for (let i = 0; i < spectrum.length; i++) {
-      wildCircle(i);
+      drawWildCircle(i);
       drawAnotherCircle(i);
-      drawCircle(i);
-
-      let rad = radOf(i);
-      p.line(
-        fftX,
-        fftY,
-        fftX + rad * p.cos(i * angle),
-        fftY + rad * p.sin(i * angle)
-      );
+      drawBoringCircle(i);
+      drawLineCircle(i);
     }
 
     p.noFill();
