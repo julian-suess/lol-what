@@ -10,13 +10,19 @@
     "bulma": "^0.8.0",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
-    "express-session": "^1.17.0",
-    "nodemon": "^2.0.2",
+    "helmet": "^3.21.2",
     "p5": "^0.10.2",
-    "parcel-bundler": "^1.12.4",
-    "socket.io": "^2.3.0"
+    "pm2": "^4.2.3"
   },
   "scripts": {
-    "start": "nodemon ./server.js && parcel watch index.html"
+    "devServer": "nodemon ./server.js && parcel watch index.html",
+    "dev": "parcel index.html",
+    "start": "pm2 start ./server.js",
+    "stop": "pm2 stop ./server.js"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "nodemon": "^2.0.2",
+    "parcel-bundler": "^1.12.4"
   }
 }

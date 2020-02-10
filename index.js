@@ -103,6 +103,16 @@ let sketch = function(p) {
     p.angleMode(p.DEGREES);
 
     updateDimension();
+
+    let myDiv = p.createDiv("click to start audio");
+    myDiv.position(boxWidth, boxHeight);
+
+    // Start the audio context on a click/touch event
+    p.userStartAudio().then(function() {
+      myDiv.remove();
+    });
+
+    p.setFrameRate(24);
   };
 
   let boxWidth;
