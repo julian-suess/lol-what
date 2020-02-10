@@ -104,12 +104,9 @@ export default function(p) {
 
     updateDimension();
 
-    let myDiv = p.createDiv("click to start audio");
-    myDiv.position(boxWidth, boxHeight);
-
     // Start the audio context on a click/touch event
     p.userStartAudio().then(function() {
-      myDiv.remove();
+      console.log("Yes!");
     });
 
     p.setFrameRate(24);
