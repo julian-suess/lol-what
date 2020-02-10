@@ -1,7 +1,7 @@
 import "p5/lib/addons/p5.sound";
 import p5 from "p5";
 
-let sketch = function(p) {
+export default function(p) {
   let mic, fft;
   let pink = "#ff4081";
   let yellow = "#ffff00";
@@ -57,7 +57,7 @@ let sketch = function(p) {
 
   let wildCircle = {};
   let drawWildCircle = i => {
-    if (i % 2 == 0) p.fill(pink);
+    if (i % 2 === 0) p.fill(pink);
     else p.fill(yellow);
 
     let wildX = p.map(i, 0, spectrum.length, boxWidth / 4, boxWidth);
@@ -70,7 +70,7 @@ let sketch = function(p) {
 
   let boringCircle = {};
   let drawBoringCircle = i => {
-    if (i % 2 == 0) p.fill(yellow);
+    if (i % 2 === 0) p.fill(yellow);
     else p.fill(pink);
 
     p.circle(
@@ -184,6 +184,4 @@ let sketch = function(p) {
       }
     }
   };
-};
-
-let myp5 = new p5(sketch);
+}
