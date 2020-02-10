@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/lol-what/static/css/main.232e3779.chunk.css",
+    "main.js": "/lol-what/static/js/main.4deb7d64.chunk.js",
+    "main.js.map": "/lol-what/static/js/main.4deb7d64.chunk.js.map",
+    "runtime-main.js": "/lol-what/static/js/runtime-main.ecfd838a.js",
+    "runtime-main.js.map": "/lol-what/static/js/runtime-main.ecfd838a.js.map",
+    "static/js/2.9ba28ebe.chunk.js": "/lol-what/static/js/2.9ba28ebe.chunk.js",
+    "static/js/2.9ba28ebe.chunk.js.map": "/lol-what/static/js/2.9ba28ebe.chunk.js.map",
+    "index.html": "/lol-what/index.html",
+    "precache-manifest.8973ce569bcef4b4361a9a0ec3fef0c0.js": "/lol-what/precache-manifest.8973ce569bcef4b4361a9a0ec3fef0c0.js",
+    "service-worker.js": "/lol-what/service-worker.js",
+    "static/css/main.232e3779.chunk.css.map": "/lol-what/static/css/main.232e3779.chunk.css.map",
+    "static/js/2.9ba28ebe.chunk.js.LICENSE.txt": "/lol-what/static/js/2.9ba28ebe.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ecfd838a.js",
+    "static/js/2.9ba28ebe.chunk.js",
+    "static/css/main.232e3779.chunk.css",
+    "static/js/main.4deb7d64.chunk.js"
+  ]
+}
