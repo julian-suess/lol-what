@@ -1,7 +1,117 @@
 import "p5/lib/addons/p5.sound";
 import p5 from "p5";
 
-export default function(p) {
+let simpleFFT = function(p) {
+  let mic, fft;
+  let spectrum;
+
+  let mode = 0;
+
+  let mode1 = () => {
+    for (let i = 0; i < spectrum.length; i += 50) {
+      let x = p.map(i, spectrum.length, 0, 0, p.windowWidth);
+      let diff = i % 4 === 0 ? spectrum[i] : -spectrum[i];
+      p.circle(x, p.windowHeight / 2 + diff, spectrum[i]);
+      p.line(x, p.windowHeight / 2, x, p.windowHeight / 2 + diff);
+    }
+  };
+
+  let mode2 = () => {
+    p.fill(255, 255, 255);
+    for (let i = 0; i < spectrum.length; i += 50) {
+      p.circle(
+        p.windowWidth / 2 - spectrum[i],
+        p.windowHeight / 2 + spectrum[i],
+        spectrum[i]
+      );
+    }
+  };
+
+  let mode3 = () => {
+    p.translate(p.windowWidth, -0.05 * p.windowHeight);
+    p.rotate(p.PI / 2);
+
+    p.strokeWeight(2);
+    for (let i = 0; i < spectrum.length; i += 10) {
+      let x = p.map(i, 0, spectrum.length, 0, p.windowWidth);
+      for (let j = spectrum.length - 1; j >= 0; j -= 10) {
+        let y = p.map(j, 0, spectrum.length, 0, p.windowWidth);
+
+        p.line(x, y + spectrum[i], x, y - spectrum[i]);
+      }
+    }
+  };
+
+  let video;
+
+  p.setup = function() {
+    p.createCanvas(p.windowWidth, p.windowHeight);
+    p.noFill();
+
+    mic = new p5.AudioIn();
+    mic.start();
+    fft = new p5.FFT();
+    fft.setInput(mic);
+
+    // Start the audio context on a click/touch event
+    p.userStartAudio().then(function() {
+      console.log("Yes!");
+    });
+
+    // p.setFrameRate(24);
+
+    // specify multiple formats for different browsers
+    video = p.createVideo(["assets/video.mp4"], vidLoad);
+    video.hide();
+  };
+
+  p.draw = function() {
+    spectrum = fft.analyze();
+
+    p.rect(0, 0, p.windowWidth, p.windowHeight);
+    // p.fill("#000000");
+
+    let midi = p.freqToMidi(spectrum[spectrum.length / 2]);
+    console.log(midi);
+
+    // if (midi > 40) {
+    //   p.fill(p.random(255), p.random(255), p.random(255));
+    // }
+    // if (midi > 20) {
+    //   mode2();
+    // }
+    // if (midi > 10) {
+    //   mode1();
+    // }
+
+    // mode2();
+    // mode1();
+
+    p.noFill();
+    p.clear();
+
+    // p.image(video, 0, 0); // draw the video frame to canvas
+    // p.filter(GRAY);
+    //p.image(video, 150, 150); // draw a second copy to canvas
+
+    mode3();
+  };
+
+  p.windowResized = function() {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
+  };
+
+  p.onMousePressed = function() {
+    video.loop();
+  };
+
+  function vidLoad() {
+    // video.loop();
+    // video.volume(0);
+  }
+};
+
+let fourFighters = function(p) {
   let mic, fft;
   let pink = "#ff4081";
   let yellow = "#ffff00";
@@ -181,4 +291,6 @@ export default function(p) {
       }
     }
   };
-}
+};
+
+export { fourFighters as default, simpleFFT };
