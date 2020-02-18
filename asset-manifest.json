@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/lol-what/static/css/main.232e3779.chunk.css",
-    "main.js": "/lol-what/static/js/main.997f6690.chunk.js",
-    "main.js.map": "/lol-what/static/js/main.997f6690.chunk.js.map",
+    "main.js": "/lol-what/static/js/main.7bca45be.chunk.js",
+    "main.js.map": "/lol-what/static/js/main.7bca45be.chunk.js.map",
     "runtime-main.js": "/lol-what/static/js/runtime-main.ecfd838a.js",
     "runtime-main.js.map": "/lol-what/static/js/runtime-main.ecfd838a.js.map",
     "static/js/2.9ba28ebe.chunk.js": "/lol-what/static/js/2.9ba28ebe.chunk.js",
     "static/js/2.9ba28ebe.chunk.js.map": "/lol-what/static/js/2.9ba28ebe.chunk.js.map",
     "index.html": "/lol-what/index.html",
-    "precache-manifest.15580c88bbe0a906a7335c15005d4988.js": "/lol-what/precache-manifest.15580c88bbe0a906a7335c15005d4988.js",
+    "precache-manifest.8d6c3b5b3bd8101e65e10eb593c66c89.js": "/lol-what/precache-manifest.8d6c3b5b3bd8101e65e10eb593c66c89.js",
     "service-worker.js": "/lol-what/service-worker.js",
     "static/css/main.232e3779.chunk.css.map": "/lol-what/static/css/main.232e3779.chunk.css.map",
     "static/js/2.9ba28ebe.chunk.js.LICENSE.txt": "/lol-what/static/js/2.9ba28ebe.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.ecfd838a.js",
     "static/js/2.9ba28ebe.chunk.js",
     "static/css/main.232e3779.chunk.css",
-    "static/js/main.997f6690.chunk.js"
+    "static/js/main.7bca45be.chunk.js"
   ]
 }

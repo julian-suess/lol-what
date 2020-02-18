@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "461ff2cd94643f25f578b7c0ee3ec76b",
+    "revision": "948b037729c481c314b9e305e900aeb8",
     "url": "/lol-what/index.html"
   },
   {
-    "revision": "731f6aca06322a8a8e43",
+    "revision": "98d5d253b8c01c076e23",
     "url": "/lol-what/static/css/main.232e3779.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lol-what/static/js/2.9ba28ebe.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "731f6aca06322a8a8e43",
-    "url": "/lol-what/static/js/main.997f6690.chunk.js"
+    "revision": "98d5d253b8c01c076e23",
+    "url": "/lol-what/static/js/main.7bca45be.chunk.js"
   },
   {
     "revision": "93b1ca5b18e53c81c004",
